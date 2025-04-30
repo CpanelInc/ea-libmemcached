@@ -12,6 +12,11 @@ Group:     System Environment/Libraries
 URL:       http://launchpad.net/libmemcached
 Source0:   http://download.tangent.org/libmemcached-%{version}.tar.gz
 
+%if 0%{?rhel} >= 10
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_brp_buildroot_policy_scripts
+%global __brp_check_rpaths %{nil}
+%endif
+
 # For test suite
 BuildRequires: bash
 BuildRequires: binutils
@@ -26,8 +31,13 @@ BuildRequires: gawk
 BuildRequires: gcc
 BuildRequires: glibc
 BuildRequires: glibc-common
+
 BuildRequires: glibc-devel
+
+%if 0%{?rhel} < 10
 BuildRequires: glibc-headers
+%endif
+
 BuildRequires: grep
 BuildRequires: gzip
 BuildRequires: libevent-devel
@@ -39,16 +49,28 @@ BuildRequires: pkgconfig
 BuildRequires: sed
 BuildRequires: tar
 
+%if 0%{?rhel} < 7
+BuildRequires: python
+BuildRequires: python-sphinx
+%endif
+
+%if 0%{?rhel} == 7
+BuildRequires: python3
+BuildRequires: python3-sphinx
+%endif
 
 %if 0%{?rhel} == 8
 BuildRequires: python36
 BuildRequires: python3-sphinx
-%else
+%endif
+
 %if 0%{?rhel} == 9
 BuildRequires: python3
 BuildRequires: python3-sphinx
 %endif
-BuildRequires: python-sphinx
+
+%if 0%{?rhel} >= 10
+BuildRequires: python3
 %endif
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
